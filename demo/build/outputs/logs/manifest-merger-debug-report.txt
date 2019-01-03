@@ -38,13 +38,15 @@ INJECTED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml:2:
 INJECTED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml:2:1-21:12
 INJECTED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml:2:1-21:12
 	package
-		ADDED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml:3:11-38
+		ADDED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml:3:58-85
 		INJECTED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml
 		INJECTED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml
 	android:versionName
 		INJECTED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml
 		ADDED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml:2:1-21:12
 		INJECTED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml
+	xmlns:tools
+		ADDED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml:3:11-57
 	android:versionCode
 		INJECTED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml
 		ADDED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml:2:1-21:12
@@ -69,6 +71,8 @@ MERGED from [com.jakewharton.timber:timber:4.7.1] C:\Users\Xseal\.gradle\caches\
 		ADDED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml:10:13-39
 	android:label
 		ADDED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml:8:13-45
+	tools:ignore
+		ADDED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml:11:45-84
 	android:roundIcon
 		ADDED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml:9:13-58
 	android:icon
