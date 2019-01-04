@@ -26,7 +26,7 @@ import java.io.IOException;
  * 2 .2 error will impact main app flow (nO Connection or  authentication problem )
  */
 class A_Predator_EE {
-    static <T extends A_Predator_NWM.CService_DBase> Boolean IsJasonValid(JsonElement json, T Pattetn) {
+    static <T extends CService_DBase> Boolean IsJasonValid(JsonElement json, T Pattetn) {
         if (json != null && !json.isJsonNull()) {
             return CheckPAttern((T) Pattetn, json);
         }
@@ -34,7 +34,7 @@ class A_Predator_EE {
         return false;
     }
 
-    private static <T extends A_Predator_NWM.CService_DBase> Boolean CheckPAttern(@NotNull T Pattern, @NotNull JsonElement e)
+    private static <T extends CService_DBase> Boolean CheckPAttern(@NotNull T Pattern, @NotNull JsonElement e)
     {
         T lol;
         try

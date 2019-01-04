@@ -10,10 +10,4 @@ public class A_Predator_NWM {
         void Faild(Throwable error);
     }
 
-    public static abstract class CService_DBase {
-        boolean Is_Data_Good() {
-            return false;
-        }
-    }
-
 }

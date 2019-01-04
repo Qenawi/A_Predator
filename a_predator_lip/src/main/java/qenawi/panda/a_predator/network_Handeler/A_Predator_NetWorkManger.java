@@ -65,7 +65,7 @@ public class A_Predator_NetWorkManger implements LifecycleObserver {
             //    RootView = ((AppCompatActivity) context).getWindow().getDecorView().findViewById(R.id.container);
         }
     }
-    public <T extends A_Predator_NWM.CService_DBase> void FetchData(final T Obj, final HashMap<String, String> Header, final String Url, final HashMap<String, Object> requistBody, final A_Predator_NWM.RequistResuiltCallBack f)
+    public <T extends CService_DBase> void FetchData(final T Obj, final HashMap<String, String> Header, final String Url, final HashMap<String, Object> requistBody, final A_Predator_NWM.RequistResuiltCallBack f)
     {
         disposable.add(SingleToneRetrofit.<Gson>get_RetrofitCs().A_PredatorGet(Header, Url, requistBody).subscribeOn(Schedulers.io())
                 .timeout(TimeOutConnection, TimeUnit.SECONDS, Single.error(new SocketTimeoutException(context.getResources().getString(R.string.TimeOutExeption))))
@@ -120,7 +120,7 @@ public class A_Predator_NetWorkManger implements LifecycleObserver {
         );
     }
 
-    public <T extends A_Predator_NWM.CService_DBase> void SendData(final T Obj, HashMap<String, String> Header, String Url, HashMap<String, Object> requistBody, A_Predator_NWM.RequistResuiltCallBack f)
+    public <T extends CService_DBase> void SendData(final T Obj, HashMap<String, String> Header, String Url, HashMap<String, Object> requistBody, A_Predator_NWM.RequistResuiltCallBack f)
     {
         disposable.add(SingleToneRetrofit.<Gson>get_RetrofitCs().A_PredatorPost(Header, Url, requistBody).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .timeout(TimeOutConnection, TimeUnit.SECONDS, Single.error(new SocketTimeoutException(context.getResources().getString(R.string.TimeOutExeption))))
