@@ -14,4 +14,7 @@ public interface Retrofit_Api
     Single<Response<JsonElement>> A_PredatorGet(@HeaderMap HashMap<String, String> headers, @Url String url, @QueryMap HashMap<String, Object> Data);
     @POST
     Single<Response<JsonElement>> A_PredatorPost(@HeaderMap HashMap<String, String> headers, @Url String url, @Body HashMap<String, Object> Data);
+
+
+
 }

@@ -4,7 +4,7 @@ ADDED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml:2:1-2
 INJECTED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml:2:1-21:12
 INJECTED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml:2:1-21:12
 INJECTED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml:2:1-21:12
-MERGED from [com.github.Qenawi:A_Predator:1.0.0] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.0.aar\3aa50cdd0293c294ebb0c830f37e823b\AndroidManifest.xml:2:1-25:12
+MERGED from [com.github.Qenawi:A_Predator:1.0.4] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.4.aar\2297993fd13b4a2ba3785bcc89519f1e\AndroidManifest.xml:2:1-21:12
 MERGED from [com.android.support:appcompat-v7:28.0.0] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\appcompat-v7-28.0.0.aar\2c355702903167556299c0564b3fa7d8\AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support.constraint:constraint-layout:1.1.3] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.3.aar\8908554f14d6f08b5bd765a9b6f78da2\AndroidManifest.xml:2:1-11:12
 MERGED from [com.android.support:support-fragment:28.0.0] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\support-fragment-28.0.0.aar\f71e81c8095abbaf47e7089e7c30a97b\AndroidManifest.xml:17:1-22:12
@@ -55,8 +55,8 @@ INJECTED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml:2:
 		ADDED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml:2:11-69
 application
 ADDED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml:5:5-19:19
-MERGED from [com.github.Qenawi:A_Predator:1.0.0] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.0.aar\3aa50cdd0293c294ebb0c830f37e823b\AndroidManifest.xml:14:5-23:19
-MERGED from [com.github.Qenawi:A_Predator:1.0.0] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.0.aar\3aa50cdd0293c294ebb0c830f37e823b\AndroidManifest.xml:14:5-23:19
+MERGED from [com.github.Qenawi:A_Predator:1.0.4] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.4.aar\2297993fd13b4a2ba3785bcc89519f1e\AndroidManifest.xml:14:5-19:19
+MERGED from [com.github.Qenawi:A_Predator:1.0.4] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.4.aar\2297993fd13b4a2ba3785bcc89519f1e\AndroidManifest.xml:14:5-19:19
 MERGED from [com.android.support.constraint:constraint-layout:1.1.3] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.3.aar\8908554f14d6f08b5bd765a9b6f78da2\AndroidManifest.xml:9:5-20
 MERGED from [com.android.support.constraint:constraint-layout:1.1.3] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.3.aar\8908554f14d6f08b5bd765a9b6f78da2\AndroidManifest.xml:9:5-20
 MERGED from [com.android.support:support-compat:28.0.0] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\support-compat-28.0.0.aar\57e59d357d0b1ea82f1a72187aff1b4e\AndroidManifest.xml:22:5-94
@@ -99,8 +99,8 @@ uses-sdk
 INJECTED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml
 INJECTED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml
-MERGED from [com.github.Qenawi:A_Predator:1.0.0] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.0.aar\3aa50cdd0293c294ebb0c830f37e823b\AndroidManifest.xml:7:5-9:41
-MERGED from [com.github.Qenawi:A_Predator:1.0.0] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.0.aar\3aa50cdd0293c294ebb0c830f37e823b\AndroidManifest.xml:7:5-9:41
+MERGED from [com.github.Qenawi:A_Predator:1.0.4] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.4.aar\2297993fd13b4a2ba3785bcc89519f1e\AndroidManifest.xml:7:5-9:41
+MERGED from [com.github.Qenawi:A_Predator:1.0.4] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.4.aar\2297993fd13b4a2ba3785bcc89519f1e\AndroidManifest.xml:7:5-9:41
 MERGED from [com.android.support:appcompat-v7:28.0.0] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\appcompat-v7-28.0.0.aar\2c355702903167556299c0564b3fa7d8\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:appcompat-v7:28.0.0] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\appcompat-v7-28.0.0.aar\2c355702903167556299c0564b3fa7d8\AndroidManifest.xml:20:5-44
 MERGED from [com.android.support.constraint:constraint-layout:1.1.3] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.3.aar\8908554f14d6f08b5bd765a9b6f78da2\AndroidManifest.xml:5:5-7:41
@@ -170,14 +170,10 @@ INJECTED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml
 		ADDED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml
 		INJECTED from D:\androidProjects\A_Predator\demo\src\main\AndroidManifest.xml
 uses-permission#android.permission.ACCESS_NETWORK_STATE
-ADDED from [com.github.Qenawi:A_Predator:1.0.0] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.0.aar\3aa50cdd0293c294ebb0c830f37e823b\AndroidManifest.xml:11:5-79
+ADDED from [com.github.Qenawi:A_Predator:1.0.4] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.4.aar\2297993fd13b4a2ba3785bcc89519f1e\AndroidManifest.xml:11:5-79
 	android:name
-		ADDED from [com.github.Qenawi:A_Predator:1.0.0] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.0.aar\3aa50cdd0293c294ebb0c830f37e823b\AndroidManifest.xml:11:22-76
+		ADDED from [com.github.Qenawi:A_Predator:1.0.4] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.4.aar\2297993fd13b4a2ba3785bcc89519f1e\AndroidManifest.xml:11:22-76
 uses-permission#android.permission.INTERNET
-ADDED from [com.github.Qenawi:A_Predator:1.0.0] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.0.aar\3aa50cdd0293c294ebb0c830f37e823b\AndroidManifest.xml:12:5-67
+ADDED from [com.github.Qenawi:A_Predator:1.0.4] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.4.aar\2297993fd13b4a2ba3785bcc89519f1e\AndroidManifest.xml:12:5-67
 	android:name
-		ADDED from [com.github.Qenawi:A_Predator:1.0.0] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.0.aar\3aa50cdd0293c294ebb0c830f37e823b\AndroidManifest.xml:12:22-64
-activity#qenawi.panda.a_predator.Demo.MainActivity
-ADDED from [com.github.Qenawi:A_Predator:1.0.0] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.0.aar\3aa50cdd0293c294ebb0c830f37e823b\AndroidManifest.xml:21:9-22:20
-	android:name
-		ADDED from [com.github.Qenawi:A_Predator:1.0.0] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.0.aar\3aa50cdd0293c294ebb0c830f37e823b\AndroidManifest.xml:21:19-75
+		ADDED from [com.github.Qenawi:A_Predator:1.0.4] C:\Users\Xseal\.gradle\caches\transforms-1\files-1.1\A_Predator-1.0.4.aar\2297993fd13b4a2ba3785bcc89519f1e\AndroidManifest.xml:12:22-64

@@ -8,10 +8,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.util.concurrent.TimeUnit;
 
-public class SingleToneRetrofit {
-    public static final String BaseUrl = "https://api.themoviedb.org/3/";
-
-    public static Retrofit_Api get_RetrofitCs() {
+public class SingleToneRetrofit
+{
+    private static final String BaseUrl = "https://api.themoviedb.org/3/";
+    private static Retrofit_Api RetroSingle_Tone =null;
+    public static Retrofit_Api get_RetrofitCs()
+    {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
 
@@ -20,12 +22,15 @@ public class SingleToneRetrofit {
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS);
-
-        return new Retrofit.Builder().baseUrl(BaseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(builder.build())
-                .build().create(Retrofit_Api.class);
-
+        if (RetroSingle_Tone!=null){return RetroSingle_Tone;}
+        else
+        {
+            RetroSingle_Tone=new Retrofit.Builder().baseUrl(BaseUrl)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .client(builder.build())
+                    .build().create(Retrofit_Api.class);
+            return RetroSingle_Tone;
+        }
     }
 }

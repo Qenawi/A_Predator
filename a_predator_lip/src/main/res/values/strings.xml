@@ -2,4 +2,9 @@
     <string name="app_name">A_Predator</string>
     <string name="TimeOutExeption">Time Out Ex</string>
     <string name="PleaseCheckYourConnection">Pleas Check Your Connection</string>
+    <string name="EmptyBodyHttpException">
+        failed To Get Required Data Pleas Try Again ..
+    </string>
+    <string name="ParsingBodyExeption">failed To Get Required Data Pleas Try Again ....</string>
+
 </resources>

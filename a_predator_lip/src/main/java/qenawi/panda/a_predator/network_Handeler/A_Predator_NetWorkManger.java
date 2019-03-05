@@ -5,24 +5,36 @@ import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.RelativeLayout;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import qenawi.panda.a_predator.R;
 import retrofit2.HttpException;
 import timber.log.Timber;
+
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
+
+import static qenawi.panda.a_predator.network_Handeler.A_Predator_EE.Handel_HttpExeption;
 
 /**
  * * main target create new instance to each view (Activity/Fragment)
@@ -45,491 +57,160 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class A_Predator_NetWorkManger implements LifecycleObserver {
+    public static final int UnAuthCode = 401;
+    private static final String TAG=A_Predator_NetWorkManger.class.getSimpleName();
+    /**
+     * second ->1000 ms
+     */
     private Context context;
-    private Context app_context;
-    // private Snackbar snackbar;
     private CompositeDisposable disposable;
-    // private RelativeLayout RootView;
+    private RelativeLayout RootView;
+    private A_Predator_NWM.BaseActionHandeler baseActionHandeler;
     private static final int TimeOutConnection = 15;
-    public A_Predator_NetWorkManger(Context C) {
+
+    public A_Predator_NetWorkManger(Context C, @NotNull A_Predator_NWM.BaseActionHandeler handeler) {
         this.context = C;
-        app_context = C.getApplicationContext();
-        //snackbar = null;
-        //RootView = null;
         disposable = new CompositeDisposable();
         if (C instanceof LifecycleOwner) {
             ((LifecycleOwner) C).getLifecycle().addObserver(this);
-            Timber.v("Life Cycle Yea ATTACHED");
+            Timber.tag(TAG).v("Life Cycle Yea ATTACHED");
         }
-        if (context instanceof AppCompatActivity) {
-            //    RootView = ((AppCompatActivity) context).getWindow().getDecorView().findViewById(R.id.container);
-        }
+        baseActionHandeler = handeler;
+
     }
-    public <T extends CService_DBase> void FetchData(final T Obj, final HashMap<String, String> Header, final String Url, final HashMap<String, Object> requistBody, final A_Predator_NWM.RequistResuiltCallBack f)
-    {
+
+    final public <T extends CService_DBase> void FetchData(final T Obj, final HashMap<String, String> Header, final String Url, final HashMap<String, Object> requistBody, final A_Predator_NWM.RequistResuiltCallBack f) {
         disposable.add(SingleToneRetrofit.<Gson>get_RetrofitCs().A_PredatorGet(Header, Url, requistBody).subscribeOn(Schedulers.io())
                 .timeout(TimeOutConnection, TimeUnit.SECONDS, Single.error(new SocketTimeoutException(context.getResources().getString(R.string.TimeOutExeption))))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s ->
                         {
-                            Timber.tag("MRQ1.1").v("%s...Error", s.code());
+                            Log.v("CserviceSucess", s.code() + "..");
                             // Status Code 200 / 300
                             if (s.isSuccessful() && A_Predator_EE.IsJasonValid(s.body(), Obj)) {
                                 f.Sucess(new Gson().fromJson(s.body(), Obj.getClass()));
                             } else {
                                 Throwable t = new HttpException(s);
                                 // code range 400 -500
-                                f.Faild(t);
+                                A_Predator_Throwable res = RetrofitThr(t);
+                                f.Faild(res);
                             }
                         }
                         ,
                         e ->
                         {
-                            //HarD( ! )Core Error  - > !@
-                            Throwable ret = e;
-                            // flat map Throw Data Here
-                            Timber.tag("MRQ1").v("%s...Error", e.getMessage());
-                            if (e instanceof IOException) {
-                                if (e instanceof SocketTimeoutException) {
-                                    ret = new IOException(context.getResources().getString(R.string.TimeOutExeption));
-                                } else {
-                                    ret = new IOException(context.getResources().getString(R.string.PleaseCheckYourConnection));
-                                }
-                                ShowSnack(ret.getMessage());
-                                //Do Action  & Set View To Stop Progress bar ( Done )
-                            } else if (e instanceof HttpException) {
-                                // ret = new Throwable(CService_EE.CrackExeption(e));
-                                HttpException httpException = (HttpException) e;
-                                ret = new HttpException(httpException.response());
-                                int ecode = httpException.code();
-                                switch (ecode) {
-                                    case 401:
-                                        HandelUnAuthAction();
-                                        break;
-                                    case 400:
-                                        break;
-                                }
-                                // Do Action & Set View To Call Stop Loading
-                            } else {
-                                // Idont What The Fuck To Do
-                            }
-                            f.Faild(ret);
+                            A_Predator_Throwable cService_throwable_callBack = RetrofitThr(e);
+                            f.Faild(cService_throwable_callBack);
                         }
 
                 )
         );
     }
 
-    public <T extends CService_DBase> void SendData(final T Obj, HashMap<String, String> Header, String Url, HashMap<String, Object> requistBody, A_Predator_NWM.RequistResuiltCallBack f)
-    {
+    final public <T extends CService_DBase> void SendData(final T Obj, HashMap<String, String> Header, String Url, HashMap<String, Object> requistBody, A_Predator_NWM.RequistResuiltCallBack f) {
         disposable.add(SingleToneRetrofit.<Gson>get_RetrofitCs().A_PredatorPost(Header, Url, requistBody).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .timeout(TimeOutConnection, TimeUnit.SECONDS, Single.error(new SocketTimeoutException(context.getResources().getString(R.string.TimeOutExeption))))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s ->
                         {
-                            Timber.tag("MRQ1.1").v("%s...Error", s.code());
+                            Log.v("CserviceSucess", s.code() + "..");
                             // Status Code 200 / 300
                             if (s.isSuccessful() && A_Predator_EE.IsJasonValid(s.body(), Obj)) {
                                 f.Sucess(new Gson().fromJson(s.body(), Obj.getClass()));
                             } else {
                                 Throwable t = new HttpException(s);
                                 // code range 400 -500
-                                f.Faild(t);
+                                A_Predator_Throwable res = RetrofitThr(t);
+                                f.Faild(res);
                             }
                         }
                         ,
                         e ->
                         {
-                            //HarD( ! )Core Error  - > !@
-                            Throwable ret = e;
-                            // flat map Throw Data Here
-                            Timber.tag("MRQ1").v("%s...Error", e.getMessage());
-                            if (e instanceof IOException) {
-                                if (e instanceof SocketTimeoutException) {
-                                    ret = new IOException(context.getResources().getString(R.string.TimeOutExeption));
-                                } else {
-                                    ret = new IOException(context.getResources().getString(R.string.PleaseCheckYourConnection));
-                                }
-                                ShowSnack(ret.getMessage());
-                                //Do Action  & Set View To Stop Progress bar ( Done )
-                            } else if (e instanceof HttpException) {
-                                // ret = new Throwable(CService_EE.CrackExeption(e));
-                                HttpException httpException = (HttpException) e;
-                                ret = new HttpException(httpException.response());
-                                int ecode = httpException.code();
-                                switch (ecode) {
-                                    case 401:
-                                        HandelUnAuthAction();
-                                        break;
-                                    case 400:
-                                        break;
-                                }
-                                // Do Action & Set View To Call Stop Loading
-                            } else {
-                                // Idont What The Fuck To Do
-                            }
-                            f.Faild(ret);
+                            A_Predator_Throwable cService_throwable_callBack = RetrofitThr(e);
+                            f.Faild(cService_throwable_callBack);
                         }
                 )
         );
     }
-    private void HandelUnAuthAction()
-    {}
-    private void ShowSnack(String message)
-    {}
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    public void onAttach() {
-        Timber.d("Attached");
+    public void onAttach()
+
+    {
+        Timber.tag(TAG).v("ATTACHED");
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     public void onDetech() {
-        Timber.d("Detached");
-        //view is not ready to handel api calls so cancel them
-        //AlertDialogHandeler.DismissDialog(null);
+        Timber.tag(TAG).v("Detached");
+        /*
+        view is not ready to handel api calls so cancel them
+         */
+        baseActionHandeler.DetacHHandelers();
         disposable.clear();
     }
 
-    //-------------------------NEw BRead-----------------------------------------
-    public static A_Predator_Throwable Handel_HttpExeption(HttpException thr) {
-        A_Predator_Throwable a_predator_throwable = new A_Predator_Throwable(thr);
-        String ClientMsg = "";
-        int code = 0;
+    private static boolean connectedToTheNetwork(Context context)
+    {
         try {
-            code = thr.code();
-            ResponseBody responseBody = null;
-            JsonElement jsonElement = null;
-            if (thr.response().body() != null) {
-                jsonElement = (JsonElement) ((HttpException) thr).response().body();
-                Timber.tag("Tracking").v("Normal  Respond Body->%s", jsonElement.toString());
-                if (jsonElement.getAsJsonObject().has("Message"))
-                    ClientMsg = jsonElement.getAsJsonObject().get("Message").getAsString();
-                if (jsonElement.getAsJsonObject().has("Code"))
-                    code = jsonElement.getAsJsonObject().get("Code").getAsInt();
-
-            } else if (thr.response().errorBody() != null) {
-                responseBody = ((HttpException) thr).response().errorBody();
-                JSONObject jObjError = new JSONObject(responseBody.string());
-                if (jObjError.has("Code"))
-                    code = jObjError.getInt("Code");
-                Timber.tag("Tracking").v("Error Respond Code->" + code + " ");
-                if (jObjError.has("Errors")) {
-                    JSONArray jsonArray = jObjError.getJSONArray("Errors");
-                    Timber.tag("Tracking").v("Error Respond Body->%s", jsonArray.getJSONObject(0).getString("errorMsg"));
-                    if (jsonArray.getJSONObject(0).has("errorMsg"))
-                        ClientMsg = jsonArray.getJSONObject(0).getString("errorMsg");
-                } else {
-                    Timber.v("Error Respond Body->%s", jObjError.getString("Message"));
-                    ClientMsg = jObjError.getString("Message");
-                }
-            } else {
-                Timber.tag("Tracking").v("Faild To Capture Any Response");
-                ClientMsg = "Empty Body Http Exception";
+            ConnectivityManager connectivityManager
+                    = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = null;
+            if (connectivityManager != null)
+            {
+                activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            ClientMsg = "Try Catch Http Exception";
-        } finally {
-            // ShowToast(ClientMsg);
-            a_predator_throwable.setWrapedMesg(ClientMsg);
-            a_predator_throwable.setErrorCode(code);
+            return activeNetworkInfo != null;
+        } catch (Exception e)
+        {
+            return false;
         }
-        return a_predator_throwable;
     }
+
+    private void ShowSnack(String Msg) {
+        baseActionHandeler.ShowSnackBar(Msg);
+    }
+
+    private void HandelUnAuthAction() {
+        baseActionHandeler.HandelUnAuthAction();
+    }
+
+    private A_Predator_Throwable RetrofitThr(Throwable e)
+    {
+        //HarD( ! )Core Error  - > !@
+        A_Predator_Throwable res;
+        // flat map Throw Data Here
+        Timber.tag(TAG).v(e);
+        if (e instanceof IOException) {
+            res = new A_Predator_Throwable(e);
+            if (e instanceof SocketTimeoutException)
+            {
+                res.setACtion(context.getResources().getString(R.string.TimeOutExeption));
+            } else {
+                res.setACtion(context.getResources().getString(R.string.PleaseCheckYourConnection));
+            }
+            //res default do action false
+            ShowSnack(res.getACtion());
+            //Do Action  & Set View To Stop Progress bar ( Done )
+        }// IO EX
+        else if (e instanceof HttpException)
+        {
+            res = Handel_HttpExeption((HttpException) e, context);
+            switch (res.getErrorCode()) {
+                case UnAuthCode:
+                    res.setDoAction(false);
+                    HandelUnAuthAction();
+                    break;
+            }// Do Action & Set View To Call Stop Loading
+
+        } // Http ExP
+        else {
+            res = new A_Predator_Throwable(e);
+            res.setACtion(context.getResources().getString(R.string.EmptyBodyHttpException));
+            res.setDoAction(true);// Show Toast With Default Msg
+        } // New Error Type
+        return res;
+    }
+
 }
-  /*
-public class CService implements LifecycleObserver
-{
-/**
- * second -> 1000 ms
- *
- private Context context;
- private Context app_context;
- private Snackbar snackbar;
- private CompositeDisposable disposable;
- private RelativeLayout RootView;
- private static final int TimeOutConnection = 15;
- public CService(Context C)
- {
- this.context = C;
- app_context = C.getApplicationContext();
- snackbar = null;
- RootView = null;
- disposable = new CompositeDisposable();
- if (C instanceof LifecycleOwner) {
- ((LifecycleOwner) C).getLifecycle().addObserver(this);
- Log.v("Life Cycle Yea", "ATTACHED");
- }
- if (context instanceof AppCompatActivity)
- RootView = ((AppCompatActivity) context).getWindow().getDecorView().findViewById(R.id.container);
-
- }
- public <T extends CService_DBase> void FetchData(final T Obj, final HashMap<String, String> Header, final String Url, final HashMap<String, Object> requistBody, final CsCallBack f)
- {
- disposable.add(SingleToneRetrofit.<Gson>get_RetrofitCs().CserviceGet(Header, Url, requistBody).subscribeOn(Schedulers.io())
- .timeout(TimeOutConnection, TimeUnit.SECONDS, Single.error(new SocketTimeoutException(context.getResources().getString(R.string.TimeOutExeption))))
- .observeOn(AndroidSchedulers.mainThread())
- .subscribe(s ->
- {
- Log.v("MRQ1.1", s.code() + "...Error");
- // Status Code 200 / 300
- if (s.isSuccessful() && CService_EE.IsJasonValid(s.body(), Obj)) {
- f.Sucess(new Gson().fromJson(s.body(), Obj.getClass()));
- } else
- {
- Throwable t = new HttpException(s);
- // code range 400 -500
- f.Faild(t);
- }
- }
- ,
- e ->
- {
- //HarD( ! )Core Error  - > !@
- Throwable ret = e;
- // flat map Throw Data Here
- Log.v("MRQ1", e.getMessage() + "...Error");
- if (e instanceof IOException)
- {
- if (e instanceof SocketTimeoutException)
- {
- ret = new IOException(context.getResources().getString(R.string.TimeOutExeption));
- } else
- {
- ret = new IOException(context.getResources().getString(R.string.PleaseCheckYourConnection));
- }
- ShowSnack(ret.getMessage());
- //Do Action  & Set View To Stop Progress bar ( Done )
- }
- else if (e instanceof HttpException)
- {
- // ret = new Throwable(CService_EE.CrackExeption(e));
- HttpException httpException = (HttpException) e;
- ret=new HttpException(httpException.response());
- int ecode = httpException.code();
- switch (ecode)
- {
- case 401:
- HandelUnAuthAction();
- break;
- case 400:
- break;
- }
- // Do Action & Set View To Call Stop Loading
- }
- else
- {
- // Idont What The Fuck To Do
- }
- f.Faild(ret);
- }
-
- )
- );
- }
- public <T extends CService_DBase> void SendData(final T Obj, HashMap<String, String> Header, String Url, HashMap<String, Object> requistBody, CsCallBack f)
- {
- disposable.add(SingleToneRetrofit.<Gson>get_RetrofitCs().CservicePost(Header, Url, requistBody).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
- .timeout(TimeOutConnection, TimeUnit.SECONDS, Single.error(new SocketTimeoutException(context.getResources().getString(R.string.TimeOutExeption))))
- .observeOn(AndroidSchedulers.mainThread())
- .subscribe(s ->
- {
- Log.v("MRQ1.1", s.code() + "...Error");
- // Status Code 200 / 300
- if (s.isSuccessful() && CService_EE.IsJasonValid(s.body(), Obj)) {
- f.Sucess(new Gson().fromJson(s.body(), Obj.getClass()));
- } else
- {
- Throwable t = new HttpException(s);
- // code range 400 -500
- f.Faild(t);
- }
- }
- ,
- e ->
- {
- //HarD( ! )Core Error  - > !@
- Throwable ret = e;
- // flat map Throw Data Here
- Log.v("MRQ1", e.getMessage() + "...Error");
-
- if (e instanceof IOException)
- {
- if (e instanceof SocketTimeoutException)
- {
- ret = new IOException(context.getResources().getString(R.string.TimeOutExeption));
- } else
- {
- ret = new IOException(context.getResources().getString(R.string.PleaseCheckYourConnection));
- }
- ShowSnack(ret.getMessage());
- //Do Action  & Set View To Stop Progress bar ( Done )
- }
-
-
-
-
- else if (e instanceof HttpException)
- {
- // ret = new Throwable(CService_EE.CrackExeption(e));
- HttpException httpException = (HttpException) e;
- ret=new HttpException(httpException.response());
- int ecode = httpException.code();
- switch (ecode)
- {
- case 401:
- HandelUnAuthAction();
- break;
- case 400:
- break;
- }
- // Do Action & Set View To Call Stop Loading
- }
- else
- {
- // Idont What The Fuck To Do
- }
- f.Faild(ret);
- }
- )
- );
- }
- public interface CsCallBack {
- <T> void Sucess(T Resposne);
-
- void Faild(Throwable throwable);
- }
- //--------------------------------------------------------
- @OnLifecycleEvent(Lifecycle.Event.ON_RESUME) public void onAttach()
-
- {
- Log.v("ATTACHED", "ATTACHED");
- }
-
- @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE) public void onDetech() {
- Log.v("Detached", "ATTACHED");
- /*
- view is not ready to handel api calls so cancel them
-
- AlertDialogHandeler.DismissDialog(null);
- disposable.clear();
- Snackbar.clearQueue();
- }
- public static boolean isNetworkAvailable(Context context) {
- if (connectedToTheNetwork(context)) {
- try {
- HttpURLConnection urlc = (HttpURLConnection)
- (new URL("http://clients3.google.com/generate_204")
- .openConnection());
- urlc.setRequestProperty("User-Agent", "Android");
- urlc.setRequestProperty("Connection", "close");
- urlc.setConnectTimeout(1500);
- urlc.connect();
- return (urlc.getResponseCode() == 204 &&
- urlc.getContentLength() == 0);
- } catch (IOException e) {
- Log.e(CService.class.getName(), "Error checking internet connection", e);
- }
- } else {
- Log.d(CService.class.getName(), "No network available!");
- }
- return false;
- }
- private static boolean connectedToTheNetwork(Context context) {
- try {
- ConnectivityManager connectivityManager
- = (ConnectivityManager) context.getSystemService(context.CONNECTIVITY_SERVICE);
- NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
- return activeNetworkInfo != null;
- } catch (Exception e) {
- return false;
- }
-
- }
- private void ShowSnack(String Msg) {
-
- snackbar = new Snackbar(context, Msg, 1200);
- snackbar.setStyle(Snackbar.Style.Floating);
- snackbar.setTapOutsideToDismissEnabled(true);
- snackbar.setSwipeToDismissEnabled(true);
- snackbar.setGravity(Gravity.START | Gravity.BOTTOM);
- if (RootView != null)
- snackbar.show(RootView);
- }
- private void HandelUnAuthAction() {
- AlertDialogHandeler.ShowUnAuthDialog(context, new unAutrized_dialog.UnAuthrizedDialogCallBack() {
- @Override public void ReAuthrize() {
- ((AppCompatActivity) context).finishAffinity();
- ((AppCompatActivity) context).startActivity(new Intent(context, Sigin_In.class));
- ((AppCompatActivity) context).finish();
- }
-
- @Override public void ExitAPP() {
- Shared_prefs.save_Loged("out", context);
- ((AppCompatActivity) context).finishAffinity();
- ((AppCompatActivity) context).finish();
- }
- }, null);
- }
- }
-
- //-------------------------NEw BRead-----------------------------------------
- public static CService_Throwable Handel_HttpExeption(HttpException thr) {
- CService_Throwable cService_throwable = new CService_Throwable(thr);
- String ClientMsg = "";
- int code = 0;
- try {
- code = thr.code();
- ResponseBody responseBody = null;
- JsonElement jsonElement = null;
- if (thr.response().body() != null)
- {
- jsonElement = (JsonElement) ((HttpException) thr).response().body();
- Log.v("Tracking", "Normal  Respond Body->" + jsonElement.toString());
- if (jsonElement.getAsJsonObject().has("Message"))
- ClientMsg = jsonElement.getAsJsonObject().get("Message").getAsString();
- if (jsonElement.getAsJsonObject().has("Code"))
- code = jsonElement.getAsJsonObject().get("Code").getAsInt();
-
- } else if (thr.response().errorBody() != null)
- {
- responseBody = ((HttpException) thr).response().errorBody();
- JSONObject jObjError = new JSONObject(responseBody.string());
- if (jObjError.has("Code"))
- code = jObjError.getInt("Code");
- Log.v("Tracking", "Error Respond Code->" + code + " ");
- if (jObjError.has("Errors"))
- {
- JSONArray jsonArray = jObjError.getJSONArray("Errors");
- Log.v("Tracking", "Error Respond Body->" + jsonArray.getJSONObject(0).getString("errorMsg"));
- if (jsonArray.getJSONObject(0).has("errorMsg"))
- ClientMsg = jsonArray.getJSONObject(0).getString("errorMsg");
- }
- else
- {
- Log.v("Tracking", "Error Respond Body->" + jObjError.getString("Message"));
- ClientMsg = jObjError.getString("Message");
- }
- }
- else
- {
- Log.v("Tracking", "Faild To Capture Any Response");
- ClientMsg = "Empty Body Http Exception";
- }
- } catch (Exception e) {
- e.printStackTrace();
- ClientMsg = "Try Catch Http Exception";
- } finally {
- // ShowToast(ClientMsg);
- cService_throwable.setACtion(ClientMsg);
- cService_throwable.setErrorCode(code);
- }
- return cService_throwable;
- }
- /*
- =
- =
- =
- -
- */
