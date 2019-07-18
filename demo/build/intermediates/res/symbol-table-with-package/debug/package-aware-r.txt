@@ -837,6 +837,8 @@ layout select_dialog_singlechoice_material
 layout support_simple_spinner_dropdown_item
 mipmap ic_launcher
 mipmap ic_launcher_round
+string EmptyBodyHttpException
+string ParsingBodyExeption
 string PleaseCheckYourConnection
 string TimeOutExeption
 string abc_action_bar_home_description

@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "D:\\androidProjects\\A_Predator\\demo\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v24\\values-v24.xml",
+            "outputFile": "/home/ahmed1994/mrQenawi/work/androidProjects/A_Predator/demo/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v24/values-v24.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Xseal\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-28.0.0.aar\\2c355702903167556299c0564b3fa7d8\\res\\values-v24\\values-v24.xml",
+                    "source": "/home/ahmed1994/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/5d9adc8f73fb6113cf19b661e887346f/res/values-v24/values-v24.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",

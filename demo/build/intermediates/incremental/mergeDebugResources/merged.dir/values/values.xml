@@ -1799,6 +1799,10 @@
     <integer name="cancel_button_image_alpha">127</integer>
     <integer name="config_tooltipAnimTime">150</integer>
     <integer name="status_bar_notification_info_maxnum">999</integer>
+    <string name="EmptyBodyHttpException">
+        failed To Get Required Data Pleas Try Again ..
+    </string>
+    <string name="ParsingBodyExeption">failed To Get Required Data Pleas Try Again ....</string>
     <string name="PleaseCheckYourConnection">Pleas Check Your Connection</string>
     <string name="TimeOutExeption">Time Out Ex</string>
     <string name="abc_action_bar_home_description">Navigate home</string>
